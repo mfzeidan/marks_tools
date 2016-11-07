@@ -26,3 +26,6 @@ let $doc := { "student" : [
 {"co": "CS530", "pre": "CS530"},
 {"co": "CS560", "pre": "CS520"}
 ]}
+
+
+http://try.zorba.io/queries/xquery

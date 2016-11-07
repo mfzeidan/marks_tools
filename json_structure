@@ -1,0 +1,28 @@
+jsoniq version "1.0";
+
+let $doc := { "student" : [
+{ "s": "G113", "name": "Tom", "major": "CS"},
+{ "s": "G114", "name": "John Smith", "major": "CS"},
+{ "s": "G115", "name": "Tom", "major": "CS"}],
+"course": [
+{"co": "CS530", "title": "math foundations", "credits": 3}
+],
+"class": [
+{"cl": "11427", "co": "CS530", "instructor": "Brodsky"},
+{"cl": "11428", "co": "CS550", "instructor": "Brodsky"}, 
+{"cl": "11429", "co": "CS535", "instructor": "Brodsky"} 
+],
+"transcript": [
+{"s": "G114", "co": "CS550", "grade": "A", "se": "2015-16-1"},
+{"s": "G114", "co": "CS530", "grade": "A", "se": "2015-16-1"},
+{"s": "G115", "co": "CS535", "grade": "B", "se": "2015-16-1"},
+{"s": "G0017", "co": "CS530", "grade": "A", "se": "2015-16-1"}
+],
+"enrolled": [
+{"s": "G0017", "cl": "11428"},
+{"s": "G113", "cl": "11428"}
+],
+"prereq": [
+{"co": "CS530", "pre": "CS530"},
+{"co": "CS560", "pre": "CS520"}
+]}

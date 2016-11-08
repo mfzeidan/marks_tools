@@ -53,6 +53,18 @@ return $tscript = $stud.s
 c. All students named “John Smith” has taken the course “cs530”
 (must be in Transcipts)
 
+
+let $jsmith_no :=(
+for $x in $doc("student")[]
+where (every $name in $x.name satisfies $name eq "John Smith"  )
+return $x.s
+)
+
+let $search_classes := $doc("transcript")[][$$.s eq $jsmith_no].co
+for $class in $search_classes
+where $class eq "CS530"
+return $class
+
 // NOT RIGHT
 
 let $student_no :=(

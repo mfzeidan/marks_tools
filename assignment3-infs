@@ -91,6 +91,27 @@ each class she is enrolled in.
 g. A student named “John Smith” is enrolled in a class for which he
 did satisfied all prerequisites.
 
+//NOT CORRECt
+
+let $jsmith_no :=(
+for $x in $doc("student")[]
+where (every $name in $x.name satisfies $name eq "John Smith"  )
+return $x.s
+)
+let $jsmith_tscript := (
+    for $x in $jsmith_no
+    return $doc("transcript")[][$$.s eq  $x]
+    )
+
+let  $jsmith_classes:=
+(
+for $x in $jsmith_tscript
+return $x.co)
+
+let $class_w_pre := $doc("prereq")[].co
+
+return $class_w_pre
+
 
 h. Some courses do not have prerequisites
 

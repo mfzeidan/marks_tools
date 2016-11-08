@@ -67,15 +67,17 @@ return $class
 D. The student “G113” student has satisfied all prerequisites each
 class she is enrolled in. 
 
-//NOT RIGHT
+//fine
 
-let $student := "G113"
-let $student_classes := $doc.("enrolled")[][$$.s = $student]
-let $currently_enrolled := $student_classes.cl
-let $find_class := $doc.("class")[][$$.cl = $currently_enrolled].co
-let $find_prereq := $doc.("prereq")[][$$.co = $find_class]
-let $see_if_they_took := $doc.("transcript")[][$$.co = $find_prereq.pre][$$.s = $student]
-return $see_if_they_took
+let $jsmith_no :=(
+for $x in $doc("student")[]
+where (every $name in $x.name satisfies $name eq "John Smith"  )
+return $x.s
+)
+let $search_classes := $doc("transcript")[][$$.s eq $jsmith_no].co
+for $class in $search_classes
+where $class eq "CS52"
+return $class = $class
 
 e. Every student has satisfied all prerequisites each class she is
 enrolled in.
@@ -88,7 +90,7 @@ each class she is enrolled in.
 g. A student named “John Smith” is enrolled in a class for which he
 did satisfied all prerequisites.
 
-//NOT CORRECt
+//eh
 
 let $jsmith_no :=(
 for $x in $doc("student")[]
@@ -107,11 +109,12 @@ return $x.co)
 
 let $class_w_pre := $doc("prereq")[].co
 
-return $class_w_pre
+return $class_w_pre = $class_w_pre
 
 
 h. Some courses do not have prerequisites
 
+//fine
 
 let $course := $doc("course")[].co
 let $prereqs := $doc("prereq")[].co
@@ -119,6 +122,8 @@ return $prereqs = $course
 
 
 i. All classes offered this semester have prerequisites.
+
+//fine
 
 let $course := $doc("course")[].co
 let $prereqs := $doc("prereq")[].co
@@ -131,6 +136,8 @@ they have taken (must appear in Transcripts)
 k. All students currently involved in classes taught by professor
 Brodsky (instructor = “Brodsky”) major in “CS”
 
+//needs proper boolean
+
 let $brod := $doc("class")[][$$.instructor = "Brodsky"].co
 let $brod_stud := $doc("transcript")[][$$.co = $brod].s
 let $students := $doc("student")[][$$.s = $brod_stud]
@@ -142,11 +149,13 @@ return $student.major = "CS"
 l. Some students who are currently enrolled in classes taught by
 professor Brodsky major in “CS”
 
+//fine
+
 let $brod := $doc("class")[][$$.instructor = "Brodsky"].co
 let $brod_stud := $doc("transcript")[][$$.co = $brod].s
 let $students := $doc("student")[][$$.s = $brod_stud]
 for $student in $students
-where (every $student  in $students satisfies $student.major = "CS")
+where (some $student  in $students satisfies $student.major = "CS")
 return $student.major = "CS"
 
 2. Write jsoniq queries to express/compute each of the following sets
@@ -177,6 +186,8 @@ c. All students who satisfied all prerequisites each class they are
 enrolled in.
 
 
+
+
 d. All students who are enrolled in a class for which they have not
 satisfied all its prerequisites.
 
@@ -185,16 +196,15 @@ e. All students named “John Smith” who are enrolled in a class for
 which they have not satisfied all its prerequisites.
 
 
-
 f. All courses that do not have prerequisites
 
-// NOT CORRECT
+// CORRECT
 
 let $classes_offered := distinct-values($doc("transcript")[].co)
 let $prereqs := distinct-values($doc("prereq")[].pre)
-for $x in $classes_offered
-where $x != $prereqs
-return $x
+for $class in $classes_offered
+where $class = $prereqs
+return $class
 
 g. All course that do have some prerequisites
 
@@ -226,15 +236,11 @@ they have taken (must appear in Transcripts)
 //eh CORRECT
 
 let $students := $doc("student")[].s
-
 let $A_OR_B :=(
 for $stud in $students
 where (every $grade in $doc("transcript")[].s satisfies  $doc("transcript")[][$$.s = $stud][$$.grade = "A" or $$.grade = "B"])
 return $stud)
-
 return $A_or_B
-
-
 
 j. All CS students who are currently enrolled in a class taught by
 professor Brodsky (instructor = “Brodsky”).

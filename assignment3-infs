@@ -1,4 +1,12 @@
-jsoniq version "1.0";
+
+for $x in $doc("student")[]
+where (every $name in $x.major satisfies $name  )
+return $x.major = "CS" 
+
+
+
+
+soniq version "1.0";
 
 let $doc := { "student" : [
 { "s": "G0017", "name": "Tom", "major": "CS"}],

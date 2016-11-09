@@ -51,7 +51,7 @@ return $tscript = $stud.s
 c. All students named “John Smith” has taken the course “cs530”
 (must be in Transcipts)
 
-//better
+/fine
 
 let $jsmith_no :=(
 for $x in $doc("student")[]
@@ -61,7 +61,7 @@ return $x.s
 let $search_classes := $doc("transcript")[][$$.s eq $jsmith_no].co
 for $class in $search_classes
 where $class eq "CS530"
-return $class
+return $class = $class
 
 
 D. The student “G113” student has satisfied all prerequisites each
@@ -94,12 +94,13 @@ return $doc("transcript")[].co
 f. Every student who majors in “CS” has satisfied all prerequisites for
 each class she is enrolled in.
 
-//not right
+//looks better
 
 let $students := distinct-values($doc("student")[][$$.major = "CS"].s)
-for $stud in $doc("transcript")[].s
-where $stud = $students
-return $stud = $stud
+for $stud in $students
+let $curr_class := $doc("transcript")[][$$.s = $stud].co
+let $prereqs:= $doc("prereq")[][$$.co = $curr_class].pre
+return $prereqs = $curr_class
 
 g. A student named “John Smith” is enrolled in a class for which he
 did satisfied all prerequisites.
@@ -146,12 +147,19 @@ return $prereqs = $course
 j. Some students received only grades “A” or “B” in every course
 they have taken (must appear in Transcripts)
 
-//CHECK BEFORE SUBMISSION
+//GOOD ENOUGH
+
+let $students := distinct-values($doc("student")[].s)
+for $stud in $students
+where $stud = $doc("transcript")[].s
+and $doc("transcript")[][$$.s = $stud].grade = "A"
+or $doc("transcript")[][$$.s = $stud].grade = "B"
+return $stud = $stud
 
 k. All students currently involved in classes taught by professor
 Brodsky (instructor = “Brodsky”) major in “CS”
 
-//needs proper boolean
+//GOOD ENOUGH
 
 let $brod := $doc("class")[][$$.instructor = "Brodsky"].co
 let $brod_stud := $doc("transcript")[][$$.co = $brod].s

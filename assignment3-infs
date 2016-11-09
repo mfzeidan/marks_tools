@@ -76,16 +76,30 @@ return $x.s
 )
 let $search_classes := $doc("transcript")[][$$.s eq $jsmith_no].co
 for $class in $search_classes
-where $class eq "CS52"
-return $class = $class
+where $class = $search_classes
+return $class  = $class
 
 e. Every student has satisfied all prerequisites each class she is
 enrolled in.
+
+//not right
+
+let $students := distinct-values($doc("student")[].s)
+let $transcript_s := $doc("transcript")[].s
+for $s in $transcript_s
+where $doc("transcript")[].s = $s
+return $doc("transcript")[].co
 
 
 f. Every student who majors in “CS” has satisfied all prerequisites for
 each class she is enrolled in.
 
+//not right
+
+let $students := distinct-values($doc("student")[][$$.major = "CS"].s)
+for $stud in $doc("transcript")[].s
+where $stud = $students
+return $stud = $stud
 
 g. A student named “John Smith” is enrolled in a class for which he
 did satisfied all prerequisites.
@@ -132,6 +146,7 @@ return $prereqs = $course
 j. Some students received only grades “A” or “B” in every course
 they have taken (must appear in Transcripts)
 
+//CHECK BEFORE SUBMISSION
 
 k. All students currently involved in classes taught by professor
 Brodsky (instructor = “Brodsky”) major in “CS”
@@ -185,16 +200,17 @@ return $transcripts
 c. All students who satisfied all prerequisites each class they are
 enrolled in.
 
-
-
+//unsure
 
 d. All students who are enrolled in a class for which they have not
 satisfied all its prerequisites.
 
+//unsure
 
 e. All students named “John Smith” who are enrolled in a class for
 which they have not satisfied all its prerequisites.
 
+//unsure
 
 f. All courses that do not have prerequisites
 
@@ -245,7 +261,7 @@ return $A_or_B
 j. All CS students who are currently enrolled in a class taught by
 professor Brodsky (instructor = “Brodsky”).
 
-//CORRRECT
+//CORRECT
 
 let $q2 := $doc.("class")[][$$.instructor = "Brodsky"]
 let $classes_taught_by_teach := $q2.co

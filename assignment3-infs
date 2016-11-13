@@ -64,7 +64,7 @@ class she is enrolled in.
 
 let $jsmith_no :=(
 for $x in $doc("student")[]
-where (every $name in $x.name satisfies $name eq "John Smith"  )
+where (every $name in $x.s satisfies $name eq "G113"  )
 return $x.s
 )
 let $search_classes := $doc("transcript")[][$$.s eq $jsmith_no].co
@@ -131,23 +131,23 @@ return $prereqs = $course
 
 i. All classes offered this semester have prerequisites.
 
-//fine
+//fixed
 
-let $course := $doc("course")[].co
-let $prereqs := $doc("prereq")[].co
-return $prereqs = $course
+return every $cl in $doc.class[]
+satisfies (some $prereq in $doc.prereq[] satisfies $prereq.co = $cl.co)
 
 j. Some students received only grades “A” or “B” in every course
 they have taken (must appear in Transcripts)
 
 //GOOD ENOUGH
 
-let $students := distinct-values($doc("student")[].s)
-for $stud in $students
-where $stud = $doc("transcript")[].s
-and $doc("transcript")[][$$.s = $stud].grade = "A"
-or $doc("transcript")[][$$.s = $stud].grade = "B"
-return $stud = $stud
+return some $st in $doc.student[]
+satisfies (every $b in $doc.transcript[]
+		satisfies (
+			 $b.s = $st.s
+			and $b.grade = "A"
+			or $b.grade = "B"))
+
 
 k. All students currently involved in classes taught by professor
 Brodsky (instructor = “Brodsky”) major in “CS”

@@ -51,17 +51,10 @@ return $tscript = $stud.s
 c. All students named “John Smith” has taken the course “cs530”
 (must be in Transcipts)
 
-/fine
+//fixed
 
-let $jsmith_no :=(
-for $x in $doc("student")[]
-where (every $name in $x.name satisfies $name eq "John Smith"  )
-return $x.s
-)
-let $search_classes := $doc("transcript")[][$$.s eq $jsmith_no].co
-for $class in $search_classes
-where $class eq "CS530"
-return $class = $class
+return every $s in $doc.student[][$$.name = "John Smith"]
+satisfies ($s.s = $doc.transcript[][$$.co = "CS530"].s)
 
 
 D. The student “G113” student has satisfied all prerequisites each

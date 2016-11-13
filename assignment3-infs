@@ -89,11 +89,19 @@ each class she is enrolled in.
 
 //looks better
 
-let $students := distinct-values($doc("student")[][$$.major = "CS"].s)
-for $stud in $students
-let $curr_class := $doc("transcript")[][$$.s = $stud].co
-let $prereqs:= $doc("prereq")[][$$.co = $curr_class].pre
-return $prereqs = $curr_class
+return every $st in $doc.students[][$$.major = "CS"]
+satisfies (every $e in $doc.enrolled[], $prereq in $doc.prereq[]
+            satisfies ($e.s = $st.s
+            and $prereq.pre = $e.cl))
+	    
+
+every $st in $db.student[]
+and every $e in $db.enrolled[]
+and every $prereq in $db.prereq[]
+where $db.major = "CS" and $st.s = $s.d and $e.course = $prereq.course}
+
+satisfies ($t in $db.transcript[] satisfies $t.student = $st.s and $t.course - $st.course)
+
 
 g. A student named “John Smith” is enrolled in a class for which he
 did satisfied all prerequisites.
@@ -165,14 +173,16 @@ return $student.major = "CS"
 l. Some students who are currently enrolled in classes taught by
 professor Brodsky major in “CS”
 
-//fine
+//fixed
 
-let $brod := $doc("class")[][$$.instructor = "Brodsky"].co
-let $brod_stud := $doc("transcript")[][$$.co = $brod].s
-let $students := $doc("student")[][$$.s = $brod_stud]
-for $student in $students
-where (some $student  in $students satisfies $student.major = "CS")
-return $student.major = "CS"
+return some $st in $doc.student[],
+	$cl in $doc.class[],
+	$e in $doc.enrolled[]
+	
+satisfies( $st.major = "CS" 
+and $cl.instructor = "Brodsky" 
+and $cl.cl = $e.cl)
+
 
 2. Write jsoniq queries to express/compute each of the following sets
 (sequences) of:

@@ -148,29 +148,36 @@ satisfies (every $b in $doc.transcript[]
 k. All students currently involved in classes taught by professor
 Brodsky (instructor = “Brodsky”) major in “CS”
 
-//GOOD ENOUGH
+//CORRECT
 
-let $brod := $doc("class")[][$$.instructor = "Brodsky"].co
-let $brod_stud := $doc("transcript")[][$$.co = $brod].s
-let $students := $doc("student")[][$$.s = $brod_stud]
-for $student in $students
-where (some $student  in $students satisfies $student.major = "CS")
-return $student.major = "CS"
+return every $s in 
+        (for $c in $doc.class[] ,
+        $e in $doc.enrolled[]
+        where $c.cl = $e.cl
+        and $c.instructor = "Brodsky"
+        return $e.s)
+    satisfies
+        (some $st in $doc.student[] 
+        satisfies $st.major = "CS"
+        and $st.s = $s)
+
 
 
 l. Some students who are currently enrolled in classes taught by
 professor Brodsky major in “CS”
 
-//fixed
+//CORRECT
 
-return some $st in $doc.student[],
-	$cl in $doc.class[],
-	$e in $doc.enrolled[]
-	
-satisfies( $st.major = "CS" 
-and $cl.instructor = "Brodsky" 
-and $cl.cl = $e.cl)
-
+return some $s in 
+        (for $c in $doc.class[] ,
+        $e in $doc.enrolled[]
+        where $c.cl = $e.cl
+        and $c.instructor = "Brodsky"
+        return $e.s)
+    satisfies
+        (some $st in $doc.student[] 
+        satisfies $st.major = "CS"
+        and $st.s = $s)
 
 2. Write jsoniq queries to express/compute each of the following sets
 (sequences) of:

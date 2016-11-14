@@ -60,7 +60,7 @@ satisfies ($s.s = $doc.transcript[][$$.co = "CS530"].s)
 D. The student “G113” student has satisfied all prerequisites each
 class she is enrolled in. 
 
-//fine
+//CORRECT
 
 let $classes := (
 for  $x in $doc.transcript[][$$.s = "G113"]
@@ -77,13 +77,19 @@ return $prereqs.co = $prereqs.co
 e. Every student has satisfied all prerequisites each class she is
 enrolled in.
 
-//not right
+//CORRECT BUT CHECK AGAIN
 
-let $students := distinct-values($doc("student")[].s)
-let $transcript_s := $doc("transcript")[].s
-for $s in $transcript_s
-where $doc("transcript")[].s = $s
-return $doc("transcript")[].co
+let $classes := (
+for  $x in $doc.transcript[]
+return $x)
+
+let $prereqs :=(
+for $x in $classes
+where (every $c in $doc.prereq[]
+        satisfies $c.pre = $x.co)
+        return $x)
+        
+return $prereqs.co = $prereqs.co
 
 
 f. Every student who majors in “CS” has satisfied all prerequisites for

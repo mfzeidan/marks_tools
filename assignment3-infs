@@ -95,20 +95,7 @@ return $prereqs.co = $prereqs.co
 f. Every student who majors in “CS” has satisfied all prerequisites for
 each class she is enrolled in.
 
-//CORRECT BUT CHECK
-
-
-let $classes := (
-for  $x in $doc.transcript[]
-where $x.s = $doc.student[][$$.major = "CS"].s
-return $x)
-
-let $prereqs :=(
-for $x in $classes
-where (every $c in $doc.prereq[]
-        satisfies $c.pre = $x.co)
-        return $x)
-        return $prereqs.co = $prereqs.co
+//Notes in class do not work in my jsoniq, unsure how you can combine evey and where together. Routinely getting syntax errors.
 
 
 g. A student named “John Smith” is enrolled in a class for which he

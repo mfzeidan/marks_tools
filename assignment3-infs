@@ -95,46 +95,39 @@ return $prereqs.co = $prereqs.co
 f. Every student who majors in “CS” has satisfied all prerequisites for
 each class she is enrolled in.
 
-//looks better
+//CORRECT BUT CHECK
 
-return every $st in $doc.students[][$$.major = "CS"]
-satisfies (every $e in $doc.enrolled[], $prereq in $doc.prereq[]
-            satisfies ($e.s = $st.s
-            and $prereq.pre = $e.cl))
-	    
 
-every $st in $db.student[]
-and every $e in $db.enrolled[]
-and every $prereq in $db.prereq[]
-where $db.major = "CS" and $st.s = $s.d and $e.course = $prereq.course}
+let $classes := (
+for  $x in $doc.transcript[]
+where $x.s = $doc.student[][$$.major = "CS"].s
+return $x)
 
-satisfies ($t in $db.transcript[] satisfies $t.student = $st.s and $t.course - $st.course)
+let $prereqs :=(
+for $x in $classes
+where (every $c in $doc.prereq[]
+        satisfies $c.pre = $x.co)
+        return $x)
+        return $prereqs.co = $prereqs.co
 
 
 g. A student named “John Smith” is enrolled in a class for which he
 did satisfied all prerequisites.
 
-//eh
+//CORRECT BUT CHECK AGAIN
 
-let $jsmith_no :=(
-for $x in $doc("student")[]
-where (every $name in $x.name satisfies $name eq "John Smith"  )
-return $x.s
-)
-let $jsmith_tscript := (
-    for $x in $jsmith_no
-    return $doc("transcript")[][$$.s eq  $x]
-    )
 
-let  $jsmith_classes:=
-(
-for $x in $jsmith_tscript
-return $x.co)
+let $classes := (
+for  $x in $doc.transcript[]
+where $x.s = $doc.student[][$$.name = "John Smith"].s
+return $x)
 
-let $class_w_pre := $doc("prereq")[].co
-
-return $class_w_pre = $class_w_pre
-
+let $prereqs :=(
+for $x in $classes
+where (some $c in $doc.prereq[]
+        satisfies $c.pre = $x.co)
+        return $x)
+        return $prereqs.co = $prereqs.co
 
 h. Some courses do not have prerequisites
 

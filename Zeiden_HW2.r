@@ -72,9 +72,8 @@ plsPR
 #II. (2.5 point) Chapter 7, Exercise 7.4 (p.170). For this problem, 
 #please try at least 3 out of the 4 methods we have discussed: neurnal networks, SVM, MARS, and kNN.
 
+## models tried below - NNet, SVM, knn
 
-library(caret)
-library(AppliedPredictiveModeling)
 
 set.seed(123)
 ## KNN Model
@@ -84,11 +83,10 @@ knnModel = train(x = train_fp,
                  method = "knn",
                  preProc = c("center","scale"),
                  tuneLength = 10)
-knnPred = predict(knnModel, newdata = train_fp)
-knnPR = postResample(pred=knnPred, obs = train_perm)
-rmses_training = c(knnPR[1])
-r2s_training = c(knnPR[2])
-methods = c("KNN")
+knnPred_train = predict(knnModel, newdata = train_fp)
+knnPR_train = postResample(pred=knnPred_train, obs = train_perm)
+
+knnPR_train
 
 knnPred = predict(knnModel, newdata=test_fp)
 knnPR = postResample(pred = knnPred, obs = test_perm)

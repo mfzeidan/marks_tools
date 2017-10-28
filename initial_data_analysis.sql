@@ -237,6 +237,29 @@ s.genre_id_2,
  group by source_screen_name
  order by percentage_replay desc
 
+-- source_screen_name				total_replays	total_skips	percentage_replay	percentage_skip
+--Concert							1				0			1.000				0.000
+--Payment							3				0			1.000				0.000
+--My library						13825			2905		0.826				0.174
+--Local playlist more				520759			130822		0.799				0.201
+--My library_Search					605				257			0.702				0.298
+--Discover Chart					17999			8862		0.670				0.330
+--NULL								29970			18208		0.622				0.378
+--Explore							4611			3220		0.589				0.411
+--Self profile more					24				20			0.545				0.455
+--Search							13132			11780		0.527				0.473
+--Online playlist more				64142			60225		0.516				0.484
+--Artist more						10387			11188		0.481				0.519
+--Search Trends						503				615			0.450				0.550
+--Discover Feature					10330			12738		0.448				0.552
+--Discover Genre					2834			3614		0.440				0.560
+--Album more						13615			17774		0.434				0.566
+--Discover New						503				674			0.427				0.573
+--Others profile more				7781			11737		0.399				0.601
+--Search Home						438				744			0.371				0.629
+--Unknown							1336			2927		0.313				0.687
+--Radio								10123			27344		0.270				0.730
+
 
   select  --*  from train$
  source_type, 
@@ -247,6 +270,20 @@ s.genre_id_2,
  from train$
  group by source_type
  order by percentage_replay desc
+
+--source_type				total_replays	total_skips		percentage_replay	percentage_skip
+--local-playlist			179112			39321			0.820				0.180
+--local-library				364507			95082			0.793				0.207
+--artist					632				246				0.720				0.280
+--NULL						1943			759				0.719				0.281
+--topic-article-playlist	502				241				0.676				0.324
+--online-playlist			102782			90798			0.531				0.469
+--song-based-playlist		10628			10941			0.493				0.507
+--top-hits-for-artist		18049			18626			0.492				0.508
+--song						9322			10108			0.480				0.520
+--album						16583			20613			0.446				0.554
+--listen-with				8434			11227			0.429				0.571
+--radio						10427			27692			0.274				0.726
 
 
 
